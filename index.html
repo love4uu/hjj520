@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hi 小何 💖</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffe4ec 0%, #ffd1dc 30%, #ffe0f0 60%, #ffdae9 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ---- 飘落的小心心 ---- */
+  .hearts-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg) scale(0.5); opacity: 1; }
+    80%  { opacity: 0.8; }
+    100% { transform: translateY(-10vh) rotate(360deg) scale(1.4); opacity: 0; }
+  }
+
+  .floating-heart {
+    position: absolute;
+    bottom: -60px;
+    font-size: 28px;
+    animation: floatUp 7s linear infinite;
+  }
+
+  /* 每颗心不同的延迟和水平位置由JS控制 */
+
+  /* ---- 主卡片 ---- */
+  .card {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 32px;
+    padding: 48px 40px 40px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(255, 105, 135, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.6);
+  }
+
+  /* ---- Hello Kitty 大头 ---- */
+  .kitty-face {
+    width: 140px;
+    height: 130px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+
+  /* 脸蛋轮廓 */
+  .kitty-face::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 10px;
+    width: 120px; height: 110px;
+    background: #fff;
+    border-radius: 55% 55% 45% 45%;
+    border: 3px solid #f08ca0;
+    box-shadow: 0 4px 15px rgba(240, 140, 160, 0.25);
+  }
+
+  /* 左耳 */
+  .ear-left {
+    position: absolute;
+    top: 0; left: 15px;
+    width: 36px; height: 38px;
+    background: #fff;
+    border-radius: 60% 40% 50% 40%;
+    border: 3px solid #f08ca0;
+    transform: rotate(-20deg);
+    z-index: -1;
+  }
+  .ear-left::after {
+    content: '';
+    position: absolute;
+    top: 4px; left: 5px;
+    width: 14px; height: 14px;
+    background: #fdd0da;
+    border-radius: 50% 60% 50% 50%;
+    transform: rotate(-10deg);
+  }
+
+  /* 右耳 */
+  .ear-right {
+    position: absolute;
+    top: 0; right: 15px;
+    width: 36px; height: 38px;
+    background: #fff;
+    border-radius: 40% 60% 40% 50%;
+    border: 3px solid #f08ca0;
+    transform: rotate(20deg);
+    z-index: -1;
+  }
+  .ear-right::after {
+    content: '';
+    position: absolute;
+    top: 4px; right: 5px;
+    width: 14px; height: 14px;
+    background: #fdd0da;
+    border-radius: 60% 50% 50% 50%;
+    transform: rotate(10deg);
+  }
+
+  /* 蝴蝶结 */
+  .bow {
+    position: absolute;
+    top: 0; right: 5px;
+    z-index: 2;
+  }
+  .bow-center {
+    width: 18px; height: 18px;
+    background: #ff2d55;
+    border-radius: 50%;
+    margin: 0 auto;
+    box-shadow: 0 2px 6px rgba(255, 45, 85, 0.4);
+  }
+  .bow-left {
+    position: absolute;
+    top: 3px; left: -2px;
+    width: 22px; height: 16px;
+    background: #ff2d55;
+    border-radius: 50% 0 50% 50%;
+    transform: rotate(-15deg);
+  }
+  .bow-right {
+    position: absolute;
+    top: 3px; right: -2px;
+    width: 22px; height: 16px;
+    background: #ff2d55;
+    border-radius: 0 50% 50% 50%;
+    transform: rotate(15deg);
+  }
+
+  /* 眼睛 */
+  .eyes {
+    position: absolute;
+    top: 52px; left: 0; right: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 0 12px;
+  }
+  .eye {
+    width: 10px; height: 12px;
+    background: #333;
+    border-radius: 50%;
+    animation: blink 3s infinite;
+  }
+  @keyframes blink {
+    0%, 95%, 100% { transform: scaleY(1); }
+    97% { transform: scaleY(0.05); }
+  }
+
+  /* 鼻子 */
+  .nose {
+    position: absolute;
+    top: 66px; left: 50%;
+    transform: translateX(-50%);
+    width: 10px; height: 8px;
+    background: #fcc700;
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  /* 胡须 */
+  .whisker {
+    position: absolute;
+    z-index: 2;
+    background: #555;
+    border-radius: 1px;
+  }
+  .w1 { top: 68px; left: 28px;  width: 30px; height: 1.5px; transform: rotate(-8deg); }
+  .w2 { top: 75px; left: 28px;  width: 30px; height: 1.5px; }
+  .w3 { top: 82px; left: 28px;  width: 30px; height: 1.5px; transform: rotate(8deg); }
+  .w4 { top: 68px; right: 28px; width: 30px; height: 1.5px; transform: rotate(8deg); }
+  .w5 { top: 75px; right: 28px; width: 30px; height: 1.5px; }
+  .w6 { top: 82px; right: 28px; width: 30px; height: 1.5px; transform: rotate(-8deg); }
+
+  /* ---- 文案 ---- */
+  .greeting {
+    font-size: 15px;
+    color: #e8889a;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .message {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e8456b;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 8px rgba(232, 69, 107, 0.12);
+  }
+
+  .sub-message {
+    font-size: 13px;
+    color: #d49ba8;
+    margin-bottom: 16px;
+  }
+
+  /* ---- 按钮 ---- */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff6b81, #ff3b5c);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(255, 59, 92, 0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(255, 59, 92, 0.55);
+  }
+
+  .btn-secondary {
+    background: #fff;
+    color: #ff6b81;
+    border: 2px solid #ffccd5;
+  }
+  .btn-secondary:hover {
+    background: #fff5f7;
+    border-color: #ff6b81;
+  }
+
+  /* ---- 底部装饰 ---- */
+  .footer-decor {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+    font-size: 20px;
+    opacity: 0.5;
+  }
+
+  /* ---- 弹窗 ---- */
+  .popup-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .popup-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .popup {
+    background: #fff;
+    border-radius: 24px;
+    padding: 36px 28px 28px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    max-width: 320px;
+    width: 85%;
+  }
+  .popup-emoji {
+    font-size: 56px;
+    margin-bottom: 12px;
+  }
+  .popup-text {
+    font-size: 18px;
+    color: #e8456b;
+    font-weight: 600;
+  }
+
+  /* ---- 响应式 ---- */
+  @media (max-width: 420px) {
+    .card { padding: 36px 24px 28px; }
+    .message { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hearts-container" id="heartsContainer"></div>
+
+<main class="card">
+  <!-- Hello Kitty 头像 -->
+  <div class="kitty-face">
+    <div class="ear-left"></div>
+    <div class="ear-right"></div>
+    <div class="bow">
+      <div class="bow-left"></div>
+      <div class="bow-right"></div>
+      <div class="bow-center"></div>
+    </div>
+    <div class="eyes">
+      <div class="eye"></div>
+      <div class="eye"></div>
+    </div>
+    <div class="nose"></div>
+    <div class="whisker w1"></div>
+    <div class="whisker w2"></div>
+    <div class="whisker w3"></div>
+    <div class="whisker w4"></div>
+    <div class="whisker w5"></div>
+    <div class="whisker w6"></div>
+  </div>
+
+  <p class="greeting">💝 小何专属 💝</p>
+  <h1 class="message">Hi 小何，<br>今晚战况如何？</h1>
+  <p class="sub-message">—— 来自你的专属后勤部长 ✨</p>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="showPopup()">点我 💌</button>
+    <button class="btn btn-secondary" onclick="refloatHearts()">再来一波小心心 💕</button>
+  </div>
+
+  <div class="footer-decor">
+    🎀 🐱 🌸 🎀 🐱 🌸
+  </div>
+</main>
+
+<!-- 弹窗 -->
+<div class="popup-overlay" id="popupOverlay" onclick="hidePopup()">
+  <div class="popup" onclick="event.stopPropagation()">
+    <div class="popup-emoji">💖</div>
+    <p class="popup-text">你永远是我的<br>最棒的女朋友~</p>
+  </div>
+</div>
+
+<script>
+  // ---- 生成飘落的小心心 ----
+  const container = document.getElementById('heartsContainer');
+  const emojis = ['💖', '💕', '💗', '🌸', '🎀', '💝', '✨', '💓'];
+
+  function createHeart() {
+    const el = document.createElement('span');
+    el.className = 'floating-heart';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 95 + '%';
+    el.style.animationDuration = (6 + Math.random() * 8) + 's';
+    el.style.animationDelay = Math.random() * 5 + 's';
+    el.style.fontSize = (18 + Math.random() * 30) + 'px';
+    container.appendChild(el);
+
+    // 动画结束后移除
+    el.addEventListener('animationend', () => el.remove());
+  }
+
+  // 初始生成一批
+  for (let i = 0; i < 18; i++) {
+    createHeart();
+  }
+  // 持续生成
+  setInterval(createHeart, 1200);
+
+  // ---- 再来一波 ----
+  function refloatHearts() {
+    for (let i = 0; i < 12; i++) {
+      setTimeout(createHeart, i * 80);
+    }
+  }
+
+  // ---- 弹窗 ----
+  function showPopup() {
+    document.getElementById('popupOverlay').classList.add('show');
+  }
+
+  function hidePopup() {
+    document.getElementById('popupOverlay').classList.remove('show');
+  }
+</script>
+
+</body>
+</html>
