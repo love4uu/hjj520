@@ -15,6 +15,10 @@
     align-items: center;
     font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
     overflow: hidden;
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   /* ---- 飘落的小心心 ---- */
@@ -39,7 +43,20 @@
     animation: floatUp 7s linear infinite;
   }
 
-  /* 每颗心不同的延迟和水平位置由JS控制 */
+  /* ---- 点击爆发的小心心 ---- */
+  @keyframes burstOut {
+    0%   { transform: translate(0, 0) scale(0); opacity: 1; }
+    50%  { opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(1.2); opacity: 0; }
+  }
+
+  .burst-heart {
+    position: fixed;
+    pointer-events: none;
+    font-size: 24px;
+    z-index: 20;
+    animation: burstOut 1s ease-out forwards;
+  }
 
   /* ---- 主卡片 ---- */
   .card {
@@ -54,145 +71,62 @@
     width: 90%;
     text-align: center;
     box-shadow: 0 20px 60px rgba(255, 105, 135, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.6);
+    animation: cardFloat 4s ease-in-out infinite;
+    transition: transform 0.1s;
   }
 
-  /* ---- Hello Kitty 大头 ---- */
-  .kitty-face {
-    width: 140px;
-    height: 130px;
-    margin: 0 auto 24px;
+  @keyframes cardFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* ---- SVG Kitty ---- */
+  .kitty-wrapper {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 20px;
+    cursor: pointer;
+    transition: transform 0.15s;
     position: relative;
   }
-
-  /* 脸蛋轮廓 */
-  .kitty-face::before {
-    content: '';
-    position: absolute;
-    top: 8px; left: 10px;
-    width: 120px; height: 110px;
-    background: #fff;
-    border-radius: 55% 55% 45% 45%;
-    border: 3px solid #f08ca0;
-    box-shadow: 0 4px 15px rgba(240, 140, 160, 0.25);
+  .kitty-wrapper:active {
+    transform: scale(0.92);
+  }
+  .kitty-wrapper.wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0); }
+    20% { transform: rotate(-8deg); }
+    40% { transform: rotate(8deg); }
+    60% { transform: rotate(-6deg); }
+    80% { transform: rotate(6deg); }
   }
 
-  /* 左耳 */
-  .ear-left {
-    position: absolute;
-    top: 0; left: 15px;
-    width: 36px; height: 38px;
-    background: #fff;
-    border-radius: 60% 40% 50% 40%;
-    border: 3px solid #f08ca0;
-    transform: rotate(-20deg);
-    z-index: -1;
-  }
-  .ear-left::after {
-    content: '';
-    position: absolute;
-    top: 4px; left: 5px;
-    width: 14px; height: 14px;
-    background: #fdd0da;
-    border-radius: 50% 60% 50% 50%;
-    transform: rotate(-10deg);
+  .kitty-wrapper svg {
+    width: 100%;
+    height: 100%;
   }
 
-  /* 右耳 */
-  .ear-right {
+  /* 点击计数提示 */
+  .tap-hint {
     position: absolute;
-    top: 0; right: 15px;
-    width: 36px; height: 38px;
-    background: #fff;
-    border-radius: 40% 60% 40% 50%;
-    border: 3px solid #f08ca0;
-    transform: rotate(20deg);
-    z-index: -1;
-  }
-  .ear-right::after {
-    content: '';
-    position: absolute;
-    top: 4px; right: 5px;
-    width: 14px; height: 14px;
-    background: #fdd0da;
-    border-radius: 60% 50% 50% 50%;
-    transform: rotate(10deg);
-  }
-
-  /* 蝴蝶结 */
-  .bow {
-    position: absolute;
-    top: 0; right: 5px;
-    z-index: 2;
-  }
-  .bow-center {
-    width: 18px; height: 18px;
+    top: -8px;
+    right: -8px;
     background: #ff2d55;
-    border-radius: 50%;
-    margin: 0 auto;
-    box-shadow: 0 2px 6px rgba(255, 45, 85, 0.4);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
-  .bow-left {
-    position: absolute;
-    top: 3px; left: -2px;
-    width: 22px; height: 16px;
-    background: #ff2d55;
-    border-radius: 50% 0 50% 50%;
-    transform: rotate(-15deg);
+  .tap-hint.show {
+    opacity: 1;
+    transform: scale(1);
   }
-  .bow-right {
-    position: absolute;
-    top: 3px; right: -2px;
-    width: 22px; height: 16px;
-    background: #ff2d55;
-    border-radius: 0 50% 50% 50%;
-    transform: rotate(15deg);
-  }
-
-  /* 眼睛 */
-  .eyes {
-    position: absolute;
-    top: 52px; left: 0; right: 0;
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    padding: 0 12px;
-  }
-  .eye {
-    width: 10px; height: 12px;
-    background: #333;
-    border-radius: 50%;
-    animation: blink 3s infinite;
-  }
-  @keyframes blink {
-    0%, 95%, 100% { transform: scaleY(1); }
-    97% { transform: scaleY(0.05); }
-  }
-
-  /* 鼻子 */
-  .nose {
-    position: absolute;
-    top: 66px; left: 50%;
-    transform: translateX(-50%);
-    width: 10px; height: 8px;
-    background: #fcc700;
-    border-radius: 50%;
-    z-index: 2;
-  }
-
-  /* 胡须 */
-  .whisker {
-    position: absolute;
-    z-index: 2;
-    background: #555;
-    border-radius: 1px;
-  }
-  .w1 { top: 68px; left: 28px;  width: 30px; height: 1.5px; transform: rotate(-8deg); }
-  .w2 { top: 75px; left: 28px;  width: 30px; height: 1.5px; }
-  .w3 { top: 82px; left: 28px;  width: 30px; height: 1.5px; transform: rotate(8deg); }
-  .w4 { top: 68px; right: 28px; width: 30px; height: 1.5px; transform: rotate(8deg); }
-  .w5 { top: 75px; right: 28px; width: 30px; height: 1.5px; }
-  .w6 { top: 82px; right: 28px; width: 30px; height: 1.5px; transform: rotate(-8deg); }
 
   /* ---- 文案 ---- */
   .greeting {
@@ -234,6 +168,7 @@
     cursor: pointer;
     transition: all 0.3s;
     letter-spacing: 1px;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .btn-primary {
@@ -256,7 +191,7 @@
     border-color: #ff6b81;
   }
 
-  /* ---- 底部装饰 ---- */
+  /* ---- 底部 ---- */
   .footer-decor {
     display: flex;
     justify-content: center;
@@ -307,6 +242,7 @@
   @media (max-width: 420px) {
     .card { padding: 36px 24px 28px; }
     .message { font-size: 22px; }
+    .kitty-wrapper { width: 150px; height: 150px; }
   }
 </style>
 </head>
@@ -314,27 +250,54 @@
 
 <div class="hearts-container" id="heartsContainer"></div>
 
-<main class="card">
-  <!-- Hello Kitty 头像 -->
-  <div class="kitty-face">
-    <div class="ear-left"></div>
-    <div class="ear-right"></div>
-    <div class="bow">
-      <div class="bow-left"></div>
-      <div class="bow-right"></div>
-      <div class="bow-center"></div>
-    </div>
-    <div class="eyes">
-      <div class="eye"></div>
-      <div class="eye"></div>
-    </div>
-    <div class="nose"></div>
-    <div class="whisker w1"></div>
-    <div class="whisker w2"></div>
-    <div class="whisker w3"></div>
-    <div class="whisker w4"></div>
-    <div class="whisker w5"></div>
-    <div class="whisker w6"></div>
+<main class="card" id="card">
+  <!-- Hello Kitty SVG -->
+  <div class="kitty-wrapper" id="kittyWrapper" onclick="tapKitty(event)">
+    <div class="tap-hint" id="tapHint">+1 💕</div>
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- 左耳 -->
+      <ellipse cx="42" cy="52" rx="22" ry="24" fill="#fff" stroke="#e890a0" stroke-width="2.5" transform="rotate(-15 42 52)"/>
+      <ellipse cx="42" cy="52" rx="12" ry="14" fill="#fdd0da" transform="rotate(-15 42 52)"/>
+      <!-- 右耳 -->
+      <ellipse cx="158" cy="52" rx="22" ry="24" fill="#fff" stroke="#e890a0" stroke-width="2.5" transform="rotate(15 158 52)"/>
+      <ellipse cx="158" cy="52" rx="12" ry="14" fill="#fdd0da" transform="rotate(15 158 52)"/>
+
+      <!-- 脸 -->
+      <ellipse cx="100" cy="108" rx="72" ry="63" fill="#fff" stroke="#e890a0" stroke-width="2.5"/>
+
+      <!-- 蝴蝶结 -->
+      <g transform="translate(148, 38)">
+        <ellipse cx="-11" cy="0" rx="15" ry="10" fill="#ff2d55" transform="rotate(-20)"/>
+        <ellipse cx="11" cy="0" rx="15" ry="10" fill="#ff2d55" transform="rotate(20)"/>
+        <circle cx="0" cy="0" r="9" fill="#ff2d55"/>
+        <circle cx="0" cy="0" r="3" fill="#ff5c7a"/>
+      </g>
+
+      <!-- 左眼 -->
+      <ellipse cx="76" cy="100" rx="7" ry="9" fill="#333"/>
+      <ellipse cx="78" cy="97" rx="2.5" ry="3" fill="#fff"/>
+
+      <!-- 右眼 -->
+      <ellipse cx="124" cy="100" rx="7" ry="9" fill="#333"/>
+      <ellipse cx="126" cy="97" rx="2.5" ry="3" fill="#fff"/>
+
+      <!-- 鼻子 -->
+      <ellipse cx="100" cy="114" rx="7" ry="5.5" fill="#fcc700"/>
+
+      <!-- 左胡须 -->
+      <line x1="70" y1="104" x2="22" y2="97" stroke="#888" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="70" y1="113" x2="18" y2="113" stroke="#888" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="70" y1="122" x2="22" y2="129" stroke="#888" stroke-width="1.8" stroke-linecap="round"/>
+
+      <!-- 右胡须 -->
+      <line x1="130" y1="97" x2="178" y2="104" stroke="#888" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="130" y1="113" x2="182" y2="113" stroke="#888" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="130" y1="129" x2="178" y2="122" stroke="#888" stroke-width="1.8" stroke-linecap="round"/>
+
+      <!-- 腮红 -->
+      <ellipse cx="58" cy="115" rx="10" ry="6" fill="#ffd1dc" opacity="0.5"/>
+      <ellipse cx="142" cy="115" rx="10" ry="6" fill="#ffd1dc" opacity="0.5"/>
+    </svg>
   </div>
 
   <p class="greeting">💝 小何专属 💝</p>
@@ -342,7 +305,7 @@
   <p class="sub-message">—— 来自你的专属后勤部长 ✨</p>
 
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="showPopup()">点我 💌</button>
+    <button class="btn btn-primary" onclick="showPopup(event)">点我 💌</button>
     <button class="btn btn-secondary" onclick="refloatHearts()">再来一波小心心 💕</button>
   </div>
 
@@ -360,11 +323,15 @@
 </div>
 
 <script>
-  // ---- 生成飘落的小心心 ----
-  const container = document.getElementById('heartsContainer');
+  const heartsContainer = document.getElementById('heartsContainer');
+  const kittyWrapper = document.getElementById('kittyWrapper');
+  const tapHint = document.getElementById('tapHint');
   const emojis = ['💖', '💕', '💗', '🌸', '🎀', '💝', '✨', '💓'];
+  const burstEmojis = ['💖', '💕', '💗', '💘', '💝', '💓', '✨', '🌸', '🎀'];
+  let tapCount = 0;
 
-  function createHeart() {
+  // ---- 背景飘落的小心心 ----
+  function createFloatingHeart() {
     const el = document.createElement('span');
     el.className = 'floating-heart';
     el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
@@ -372,34 +339,99 @@
     el.style.animationDuration = (6 + Math.random() * 8) + 's';
     el.style.animationDelay = Math.random() * 5 + 's';
     el.style.fontSize = (18 + Math.random() * 30) + 'px';
-    container.appendChild(el);
-
-    // 动画结束后移除
+    heartsContainer.appendChild(el);
     el.addEventListener('animationend', () => el.remove());
   }
 
-  // 初始生成一批
-  for (let i = 0; i < 18; i++) {
-    createHeart();
-  }
-  // 持续生成
-  setInterval(createHeart, 1200);
+  for (let i = 0; i < 18; i++) createFloatingHeart();
+  setInterval(createFloatingHeart, 1200);
 
-  // ---- 再来一波 ----
   function refloatHearts() {
-    for (let i = 0; i < 12; i++) {
-      setTimeout(createHeart, i * 80);
+    for (let i = 0; i < 15; i++) {
+      setTimeout(createFloatingHeart, i * 70);
     }
   }
 
+  // ---- 点击空白处爆发小心心 ----
+  document.addEventListener('click', function(e) {
+    // 排除按钮和Kitty（Kitty有自己的交互）
+    if (e.target.closest('button') || e.target.closest('.kitty-wrapper') || e.target.closest('.popup')) return;
+    burstHearts(e.clientX, e.clientY);
+  });
+
+  function burstHearts(x, y, count = 8) {
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('span');
+      el.className = 'burst-heart';
+      el.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+      const dist = 50 + Math.random() * 80;
+      el.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      el.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+      el.style.fontSize = (16 + Math.random() * 24) + 'px';
+      el.style.animationDuration = (0.7 + Math.random() * 0.6) + 's';
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+  }
+
+  // ---- 点击 Kitty 互动 ----
+  function tapKitty(event) {
+    event.stopPropagation();
+    tapCount++;
+
+    // 摇晃
+    kittyWrapper.classList.remove('wiggle');
+    void kittyWrapper.offsetWidth; // reflow
+    kittyWrapper.classList.add('wiggle');
+
+    // 弹出 +1
+    tapHint.classList.add('show');
+    tapHint.textContent = tapCount === 1 ? '+1 💕' :
+                          tapCount === 5 ? '好喜欢 💗' :
+                          tapCount === 10 ? '停不下来 😻' :
+                          tapCount === 20 ? '你是最棒的 🎀' :
+                          '+' + tapCount + ' 💕';
+    setTimeout(() => tapHint.classList.remove('show'), 1200);
+
+    // 从 Kitty 位置爆爱心
+    const rect = kittyWrapper.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    burstHearts(cx, cy, 10);
+  }
+
   // ---- 弹窗 ----
-  function showPopup() {
+  function showPopup(event) {
+    event.stopPropagation();
     document.getElementById('popupOverlay').classList.add('show');
   }
 
   function hidePopup() {
     document.getElementById('popupOverlay').classList.remove('show');
   }
+
+  // ---- 移动端触摸滑动时的小尾巴 ----
+  let touchTrailTimer = null;
+  document.addEventListener('touchmove', function(e) {
+    if (e.target.closest('button') || e.target.closest('.popup')) return;
+    if (touchTrailTimer) return;
+    touchTrailTimer = setTimeout(() => { touchTrailTimer = null; }, 150);
+    const touch = e.touches[0];
+    const el = document.createElement('span');
+    el.className = 'burst-heart';
+    el.textContent = '✨';
+    el.style.left = touch.clientX + 'px';
+    el.style.top = touch.clientY + 'px';
+    el.style.fontSize = '14px';
+    el.style.setProperty('--dx', (Math.random() - 0.5) * 40 + 'px');
+    el.style.setProperty('--dy', (Math.random() - 0.5) * 40 + 'px');
+    el.style.animationDuration = '0.6s';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }, { passive: true });
 </script>
 
 </body>
