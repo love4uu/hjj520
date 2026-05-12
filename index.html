@@ -73,18 +73,29 @@
   .header {
     text-align: center; margin-bottom: 4px;
   }
-  .header .icon-row { font-size: 36px; margin-bottom: 4px; animation: bounce 2s ease-in-out infinite; }
+  .header .icon-row {
+    margin-bottom: 8px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  .header .icon-row svg {
+    width: 44px; height: 44px;
+  }
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-8px); }
   }
-  .header h1 {
-    font-size: 26px; font-weight: 800; color: #e8456b;
-    letter-spacing: 2px;
+  .header .title-line1 {
+    font-family: 'Caveat', 'Ma Shan Zheng', 'KaiTi', cursive, sans-serif;
+    font-size: 38px; font-weight: 700; color: #e8456b;
+    letter-spacing: 6px;
     text-shadow: 0 2px 8px rgba(232,69,107,0.15);
+    line-height: 1.1;
   }
-  .header .sub {
-    font-size: 13px; color: #d49ba8; margin-top: 2px; letter-spacing: 1px;
+  .header .title-line2 {
+    font-family: 'Caveat', 'Ma Shan Zheng', 'KaiTi', cursive, sans-serif;
+    font-size: 30px; font-weight: 600; color: #ff7b9c;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 6px rgba(255,123,156,0.2);
   }
 
   /* ---- 模块卡片 ---- */
@@ -244,9 +255,24 @@
 
 <main class="main-wrap">
   <header class="header">
-    <div class="icon-row">💖</div>
-    <h1>小何专属</h1>
-    <p class="sub">每个模块都是我的心意</p>
+    <div class="icon-row">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="heartGlow" cx="40%" cy="30%">
+            <stop offset="0%" stop-color="#ff6b81"/>
+            <stop offset="100%" stop-color="#d63348"/>
+          </radialGradient>
+          <filter id="heartShadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#e8456b" flood-opacity="0.35"/>
+          </filter>
+        </defs>
+        <path d="M24,10 C24,2 14,0 10,8 C6,16 24,28 24,28 C24,28 42,16 38,8 C34,0 24,2 24,10Z"
+              fill="url(#heartGlow)" filter="url(#heartShadow)" stroke="none"/>
+        <path d="M24,22 C24,22 10,12 8,8 C6,4 10,2 12,4 C16,8 24,12 24,12" fill="#ff9db0" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="title-line1">小何</div>
+    <div class="title-line2">5201314</div>
   </header>
 
   <!-- 模块1: with u -->
@@ -443,20 +469,51 @@
   for (let i = 0; i < 14; i++) spawnHeart();
   setInterval(spawnHeart, 1500);
 
-  // ---- 蓬松云朵 ----
+  // ---- 多样性蓬松云朵 ----
   const clouds = document.getElementById('clouds');
+  const cloudShapes = [
+    // 宽扁型
+    (s) => [
+      { w: s, h: s*0.55, x: 0, y: s*0.3 },
+      { w: s*0.75, h: s*0.7, x: -s*0.28, y: s*0.12 },
+      { w: s*0.7, h: s*0.65, x: s*0.25, y: s*0.08 },
+      { w: s*0.55, h: s*0.5, x: -s*0.5, y: s*0.22 },
+      { w: s*0.5, h: s*0.45, x: s*0.42, y: s*0.18 },
+      { w: s*0.35, h: s*0.35, x: -s*0.6, y: s*0.3 },
+    ],
+    // 圆胖型
+    (s) => [
+      { w: s*1.05, h: s*0.8, x: 0, y: s*0.2 },
+      { w: s*0.85, h: s*0.85, x: -s*0.2, y: s*0.0 },
+      { w: s*0.75, h: s*0.75, x: s*0.25, y: -s*0.02 },
+      { w: s*0.55, h: s*0.5, x: -s*0.55, y: s*0.15 },
+      { w: s*0.5, h: s*0.45, x: s*0.5, y: s*0.1 },
+    ],
+    // 小巧型 (更小的 baseSize)
+    (s) => [
+      { w: s*0.9, h: s*0.5, x: 0, y: s*0.3 },
+      { w: s*0.65, h: s*0.6, x: -s*0.25, y: s*0.1 },
+      { w: s*0.55, h: s*0.55, x: s*0.2, y: s*0.08 },
+      { w: s*0.4, h: s*0.4, x: -s*0.4, y: s*0.2 },
+    ],
+    // 长条型
+    (s) => [
+      { w: s, h: s*0.5, x: 0, y: s*0.3 },
+      { w: s*0.7, h: s*0.65, x: -s*0.35, y: s*0.15 },
+      { w: s*0.65, h: s*0.6, x: s*0.3, y: s*0.1 },
+      { w: s*0.55, h: s*0.55, x: -s*0.55, y: s*0.18 },
+      { w: s*0.5, h: s*0.5, x: s*0.5, y: s*0.15 },
+      { w: s*0.35, h: s*0.35, x: s*0.35, y: s*0.35 },
+      { w: s*0.3, h: s*0.3, x: -s*0.5, y: s*0.3 },
+    ],
+  ];
+
   function spawnCloud() {
     const wrap = document.createElement('div');
     wrap.className = 'cloud-wrap';
-    const baseSize = 40 + Math.random() * 70;
-    // 用多层圆形拼出蓬松云朵
-    const blobs = [
-      { w: baseSize,     h: baseSize*0.6, x: 0,                y: baseSize*0.25 },
-      { w: baseSize*0.7, h: baseSize*0.7, x: -baseSize*0.3,    y: baseSize*0.1 },
-      { w: baseSize*0.65,h: baseSize*0.65,x: baseSize*0.25,    y: baseSize*0.05 },
-      { w: baseSize*0.5, h: baseSize*0.5, x: -baseSize*0.45,   y: baseSize*0.2 },
-      { w: baseSize*0.45,h: baseSize*0.45,x: baseSize*0.4,     y: baseSize*0.15 },
-    ];
+    const shapeIdx = Math.floor(Math.random() * cloudShapes.length);
+    const baseSize = 35 + Math.random() * 75;
+    const blobs = cloudShapes[shapeIdx](baseSize);
     blobs.forEach(b => {
       const s = document.createElement('span');
       s.style.width = b.w + 'px';
@@ -467,72 +524,78 @@
     });
     wrap.style.top = (5 + Math.random() * 65) + '%';
     wrap.style.animationDuration = (30 + Math.random() * 50) + 's';
+    wrap.style.animationDelay = Math.random() * 5 + 's';
     clouds.appendChild(wrap);
     wrap.addEventListener('animationend', () => wrap.remove());
   }
   for (let i = 0; i < 5; i++) { spawnCloud(); }
   setInterval(spawnCloud, 25000);
 
-  // ---- 音乐播放器 ----
+  // ---- April Encounter 钢琴版 BGM ----
   let audioCtx = null, musicPlaying = false, musicTimer = null;
   const musicBtn = document.getElementById('musicBtn');
 
+  // 《April Encounter》by 很美味 — 主旋律近似 (C大调, ♩=80)
   const melody = [
-    { f: 523.25, d: 0.55 }, { f: 587.33, d: 0.30 }, { f: 659.25, d: 0.55 }, { f: 783.99, d: 0.55 },
-    { f: 880.00, d: 0.80 }, { f: 783.99, d: 0.35 }, { f: 659.25, d: 0.30 }, { f: 0, d: 0.25 },
-    { f: 659.25, d: 0.55 }, { f: 587.33, d: 0.30 }, { f: 523.25, d: 0.55 }, { f: 659.25, d: 0.55 },
-    { f: 587.33, d: 0.80 }, { f: 523.25, d: 0.35 }, { f: 440.00, d: 0.30 }, { f: 0, d: 0.30 },
-    { f: 440.00, d: 0.55 }, { f: 523.25, d: 0.30 }, { f: 587.33, d: 0.55 }, { f: 659.25, d: 0.55 },
-    { f: 783.99, d: 0.55 }, { f: 659.25, d: 0.55 }, { f: 783.99, d: 0.55 }, { f: 880.00, d: 0.55 },
-    { f: 0, d: 0.30 },
-    { f: 880.00, d: 0.55 }, { f: 783.99, d: 0.30 }, { f: 1046.50, d: 0.55 }, { f: 880.00, d: 0.55 },
-    { f: 783.99, d: 0.80 }, { f: 659.25, d: 0.35 }, { f: 587.33, d: 0.30 }, { f: 0, d: 0.30 },
-    { f: 659.25, d: 0.55 }, { f: 587.33, d: 0.30 }, { f: 523.25, d: 0.55 }, { f: 587.33, d: 0.55 },
-    { f: 659.25, d: 0.55 }, { f: 523.25, d: 0.55 }, { f: 440.00, d: 0.55 }, { f: 523.25, d: 0.55 },
-    { f: 0, d: 0.25 },
-    { f: 523.25, d: 0.55 }, { f: 659.25, d: 0.55 }, { f: 587.33, d: 0.55 }, { f: 523.25, d: 0.55 },
-    { f: 440.00, d: 1.00 }, { f: 0, d: 0.80 },
+    // Phrase A1
+    { f: 659.25, d: 0.60 }, { f: 587.33, d: 0.30 }, { f: 523.25, d: 0.60 }, { f: 587.33, d: 0.30 },
+    { f: 659.25, d: 0.60 }, { f: 659.25, d: 0.30 }, { f: 783.99, d: 0.55 }, { f: 0, d: 0.20 },
+    { f: 659.25, d: 0.60 }, { f: 587.33, d: 0.30 }, { f: 523.25, d: 0.60 }, { f: 587.33, d: 0.30 },
+    { f: 659.25, d: 0.60 }, { f: 659.25, d: 0.30 }, { f: 587.33, d: 0.55 }, { f: 0, d: 0.25 },
+    // Phrase A2
+    { f: 523.25, d: 0.60 }, { f: 587.33, d: 0.30 }, { f: 659.25, d: 0.60 }, { f: 783.99, d: 0.30 },
+    { f: 880.00, d: 0.60 }, { f: 783.99, d: 0.30 }, { f: 659.25, d: 0.60 }, { f: 587.33, d: 0.30 },
+    { f: 523.25, d: 0.60 }, { f: 587.33, d: 0.30 }, { f: 659.25, d: 0.60 }, { f: 587.33, d: 0.30 },
+    { f: 523.25, d: 1.20 }, { f: 0, d: 0.40 },
+    // Phrase B1 (高潮)
+    { f: 880.00, d: 0.60 }, { f: 783.99, d: 0.30 }, { f: 1046.50, d: 0.60 }, { f: 880.00, d: 0.30 },
+    { f: 783.99, d: 0.90 }, { f: 659.25, d: 0.30 }, { f: 587.33, d: 0.30 }, { f: 0, d: 0.25 },
+    { f: 783.99, d: 0.60 }, { f: 659.25, d: 0.30 }, { f: 880.00, d: 0.60 }, { f: 783.99, d: 0.30 },
+    { f: 659.25, d: 0.90 }, { f: 587.33, d: 0.30 }, { f: 523.25, d: 0.30 }, { f: 0, d: 0.25 },
+    // Phrase B2
+    { f: 659.25, d: 0.60 }, { f: 587.33, d: 0.30 }, { f: 523.25, d: 0.60 }, { f: 440.00, d: 0.30 },
+    { f: 523.25, d: 0.60 }, { f: 587.33, d: 0.30 }, { f: 659.25, d: 0.60 }, { f: 783.99, d: 0.30 },
+    { f: 587.33, d: 0.55 }, { f: 523.25, d: 0.30 }, { f: 440.00, d: 0.60 }, { f: 523.25, d: 0.30 },
+    { f: 523.25, d: 1.50 }, { f: 0, d: 0.60 },
   ];
 
-  function playNote(freq, dur) {
+  function playPianoNote(freq, dur) {
     if (!audioCtx || !musicPlaying) return;
     const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, now);
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.10, now + 0.06);
-    gain.gain.setValueAtTime(0.10, now + dur * 0.5);
-    gain.gain.linearRampToValueAtTime(0, now + dur);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start(now);
-    osc.stop(now + dur + 0.08);
-    if (freq > 0) {
-      const osc2 = audioCtx.createOscillator();
-      const gain2 = audioCtx.createGain();
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(freq * 2, now);
-      gain2.gain.setValueAtTime(0, now);
-      gain2.gain.linearRampToValueAtTime(0.025, now + 0.04);
-      gain2.gain.linearRampToValueAtTime(0, now + dur);
-      osc2.connect(gain2);
-      gain2.connect(audioCtx.destination);
-      osc2.start(now);
-      osc2.stop(now + dur + 0.05);
-    }
+    // 模拟钢琴音色：基频 + 多个泛音
+    const harmonics = [
+      { mult: 1, vol: 0.12 },
+      { mult: 2, vol: 0.06 },
+      { mult: 3, vol: 0.025 },
+      { mult: 4, vol: 0.012 },
+      { mult: 5, vol: 0.004 },
+    ];
+    harmonics.forEach(h => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq * h.mult, now);
+      // 钢琴包络：快起 -> 自然衰减
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(h.vol, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(h.vol * 0.3, now + dur * 0.3);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + dur + 0.1);
+    });
   }
 
   function playMelody() {
     if (!musicPlaying) return;
     let delay = 0;
     melody.forEach(n => {
-      if (n.f > 0) setTimeout(() => playNote(n.f, n.d), delay * 1000);
+      if (n.f > 0) setTimeout(() => playPianoNote(n.f, n.d), delay * 1000);
       delay += n.d;
     });
     const total = melody.reduce((s, n) => s + n.d, 0);
-    musicTimer = setTimeout(playMelody, (total + 1.0) * 1000);
+    musicTimer = setTimeout(playMelody, (total + 1.5) * 1000);
   }
 
   function startMusic() {
