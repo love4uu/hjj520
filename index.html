@@ -22,7 +22,7 @@
     font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
     display: flex;
     justify-content: center;
-    padding: 24px 16px 60px;
+    padding: 24px 16px 80px;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     -webkit-user-select: none;
@@ -66,6 +66,11 @@
     width: 100%; max-width: 400px;
     display: flex; flex-direction: column; align-items: center;
     gap: 20px;
+    animation: fadeInUp 0.8s ease-out;
+  }
+  @keyframes fadeInUp {
+    0%   { opacity: 0; transform: translateY(24px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
   /* ---- 头部 ---- */
@@ -248,6 +253,11 @@
     position: fixed; bottom: 0; left: 0; width: 100%; height: 28vh;
     pointer-events: none; z-index: 1;
     opacity: 0.7;
+    animation: animalBreath 4s ease-in-out infinite;
+  }
+  @keyframes animalBreath {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -466,11 +476,23 @@
   function toggleModule(id) {
     const mod = document.getElementById(id);
     const isOpen = mod.classList.contains('open');
-    // 关闭所有
     document.querySelectorAll('.module.open').forEach(m => m.classList.remove('open'));
-    // 打开当前（除非它本来开着）
-    if (!isOpen) mod.classList.add('open');
+    if (!isOpen) {
+      mod.classList.add('open');
+      localStorage.setItem('openModule', id);
+    } else {
+      localStorage.removeItem('openModule');
+    }
   }
+
+  // 记忆上次展开的模块
+  (function restoreModule() {
+    const saved = localStorage.getItem('openModule');
+    if (saved) {
+      const mod = document.getElementById(saved);
+      if (mod) mod.classList.add('open');
+    }
+  })();
 
   // ---- 密度可控的飘落爱心 ----
   const heartsEmoji = ['💖', '💕', '💗', '🌸', '✨', '💝'];
@@ -617,58 +639,68 @@
   }
   setTimeout(scheduleCloud, 8000);
 
-  // ---- BGM (April Encounter MP3) 带加载状态 ----
+  // ---- BGM (April Encounter MP3) ----
   const bgm = document.getElementById('bgmAudio');
   const musicBtn = document.getElementById('musicBtn');
   let audioReady = false;
+  let userTouched = false; // 用户是否已经交互过
 
-  // 加载中：按钮旋转 + ⏳
   musicBtn.textContent = '⏳';
   musicBtn.classList.add('loading');
 
   bgm.addEventListener('canplaythrough', () => {
     audioReady = true;
     musicBtn.classList.remove('loading');
-    // 加载完直接尝试播放
+    // 静音自动播放 → 浏览器不会拦截
+    bgm.muted = true;
     bgm.play().then(() => {
-      musicBtn.textContent = '🎶';
-      musicBtn.classList.add('playing');
+      musicBtn.textContent = '🔇';
     }).catch(() => {
-      // 浏览器拦截了自动播放，显示暂停图标等用户点
-      musicBtn.textContent = '🎵';
+      musicBtn.textContent = '▶️';
     });
   }, { once: true });
 
-  function startMusic() {
-    bgm.play().catch(() => {});
+  function unmuteAndPlay() {
+    if (userTouched) return;
+    userTouched = true;
+    if (bgm.muted) {
+      bgm.muted = false;
+      bgm.play().catch(() => {});
+    }
     musicBtn.textContent = '🎶';
-    musicBtn.classList.remove('loading');
     musicBtn.classList.add('playing');
+  }
+
+  function startMusic() {
+    if (!bgm.muted) {
+      bgm.play().catch(() => {});
+      musicBtn.textContent = '🎶';
+      musicBtn.classList.add('playing');
+    } else {
+      unmuteAndPlay();
+    }
   }
 
   function stopMusic() {
     bgm.pause();
-    musicBtn.textContent = '🎵';
+    musicBtn.textContent = '⏸️';
     musicBtn.classList.remove('playing');
   }
 
   function toggleMusic(event) {
     event.stopPropagation();
-    if (!audioReady) return; // 没加载完不响应点击
-    bgm.paused ? startMusic() : stopMusic();
+    if (!audioReady) return;
+    if (bgm.paused) {
+      startMusic();
+    } else {
+      stopMusic();
+    }
   }
 
-  // 首次交互时开始播放
-  let autoStarted = false;
-  function tryAutoPlay() {
-    if (autoStarted || !audioReady) return;
-    autoStarted = true;
-    startMusic();
-  }
-  document.addEventListener('click', tryAutoPlay, { once: false });
-  bgm.play().then(() => {
-    if (!autoStarted) { autoStarted = true; startMusic(); }
-  }).catch(() => {});
+  // 首次点击页面 → 取消静音
+  document.addEventListener('click', (e) => {
+    if (!userTouched) unmuteAndPlay();
+  }, { once: false });
 </script>
 
 </body>
