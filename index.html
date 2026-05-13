@@ -366,43 +366,31 @@
 <!-- 底部场景：小动物 + 简笔小草 + 极简地面线 -->
 <svg class="bottom-animals" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 
-  <!-- 地面线 — 只有一根淡色曲线，不填色 -->
+  <!-- 地面线 -->
   <path d="M0,128 Q60,135 120,126 Q180,118 240,124 Q300,130 360,120 Q390,116 400,119"
         fill="none" stroke="#d8c8ce" stroke-width="1.2" stroke-linecap="round"/>
 
-  <!-- === 小草（形态各异）=== -->
-  <g transform="translate(8, 122)" stroke="#c8dbb8" stroke-width="1.1" fill="none" stroke-linecap="round">
-    <path d="M0,0 Q3,-10 1,-18"/>
-    <path d="M0,0 Q-2,-12 -4,-20"/>
-    <path d="M0,0 Q6,-8 8,-14"/>
+  <!-- === 小草（避开花朵和动物位置）=== -->
+  <g transform="translate(35, 124)" stroke="#c8dbb8" stroke-width="1.1" fill="none" stroke-linecap="round">
+    <path d="M0,0 Q3,-10 1,-18"/><path d="M0,0 Q-2,-12 -4,-20"/><path d="M0,0 Q6,-8 8,-14"/>
   </g>
-  <g transform="translate(55, 125)" stroke="#bcd0a8" stroke-width="1" fill="none" stroke-linecap="round">
-    <path d="M0,0 Q-3,-14 -5,-22"/>
-    <path d="M0,0 Q2,-10 3,-16"/>
+  <g transform="translate(78, 126)" stroke="#bcd0a8" stroke-width="1" fill="none" stroke-linecap="round">
+    <path d="M0,0 Q-3,-14 -5,-22"/><path d="M0,0 Q2,-10 3,-16"/>
   </g>
-  <g transform="translate(140, 118)" stroke="#c8d8b0" stroke-width="1" fill="none" stroke-linecap="round">
-    <path d="M0,0 Q-4,-8 -6,-14"/>
-    <path d="M0,0 Q2,-12 1,-20"/>
-    <path d="M0,0 Q6,-6 9,-10"/>
-    <path d="M0,0 Q-1,-11 -2,-18"/>
+  <g transform="translate(115, 124)" stroke="#c8d8b0" stroke-width="1" fill="none" stroke-linecap="round">
+    <path d="M0,0 Q-4,-8 -6,-14"/><path d="M0,0 Q2,-12 1,-20"/><path d="M0,0 Q6,-6 9,-10"/>
   </g>
-  <g transform="translate(230, 122)" stroke="#bcd0a8" stroke-width="1.1" fill="none" stroke-linecap="round">
-    <path d="M0,0 Q-4,-11 -3,-19"/>
-    <path d="M0,0 Q3,-9 5,-15"/>
+  <g transform="translate(250, 125)" stroke="#bcd0a8" stroke-width="1.1" fill="none" stroke-linecap="round">
+    <path d="M0,0 Q-4,-11 -3,-19"/><path d="M0,0 Q3,-9 5,-15"/>
   </g>
-  <g transform="translate(290, 120)" stroke="#c8dbb8" stroke-width="1" fill="none" stroke-linecap="round">
-    <path d="M0,0 Q-2,-10 -1,-16"/>
-    <path d="M0,0 Q5,-13 7,-21"/>
-    <path d="M0,0 Q2,-8 1,-12"/>
+  <g transform="translate(328, 124)" stroke="#c8dbb8" stroke-width="1" fill="none" stroke-linecap="round">
+    <path d="M0,0 Q-2,-10 -1,-16"/><path d="M0,0 Q5,-13 7,-21"/><path d="M0,0 Q2,-8 1,-12"/>
   </g>
-  <g transform="translate(350, 124)" stroke="#b8cca0" stroke-width="1.1" fill="none" stroke-linecap="round">
-    <path d="M0,0 Q-2,-16 -1,-24"/>
-    <path d="M0,0 Q4,-9 6,-14"/>
-    <path d="M0,0 Q-5,-6 -8,-10"/>
+  <g transform="translate(372, 124)" stroke="#b8cca0" stroke-width="1.1" fill="none" stroke-linecap="round">
+    <path d="M0,0 Q-2,-16 -1,-24"/><path d="M0,0 Q4,-9 6,-14"/><path d="M0,0 Q-5,-6 -8,-10"/>
   </g>
-  <g transform="translate(180, 124)" stroke="#c0d4ac" stroke-width="0.9" fill="none" stroke-linecap="round">
-    <path d="M0,0 Q-1,-14 -3,-20"/>
-    <path d="M0,0 Q3,-8 4,-12"/>
+  <g transform="translate(200, 126)" stroke="#c0d4ac" stroke-width="0.9" fill="none" stroke-linecap="round">
+    <path d="M0,0 Q-1,-14 -3,-20"/><path d="M0,0 Q3,-8 4,-12"/>
   </g>
 
   <!-- === 小熊 === -->
@@ -444,12 +432,10 @@
     <!-- 眼睛 -->
     <circle cx="15" cy="0" r="1.5" fill="#c09098"/>
     <circle cx="25" cy="0" r="1.5" fill="#c09098"/>
-    <!-- 猪鼻子（椭圆 + 鼻孔） -->
-    <ellipse cx="20" cy="6" rx="6" ry="4.5" fill="#ffe0e8" stroke="#f0b8c0" stroke-width="1.2"/>
-    <circle cx="18" cy="5.5" r="1" fill="#e8a0b0"/>
-    <circle cx="22" cy="5.5" r="1" fill="#e8a0b0"/>
-    <!-- 笑脸 -->
-    <path d="M17,9 Q20,12 23,9" fill="none" stroke="#f0b8c0" stroke-width="1" stroke-linecap="round"/>
+    <!-- 猪鼻子（横椭圆 + 小鼻孔） -->
+    <ellipse cx="20" cy="6" rx="7" ry="5" fill="#ffe0e8" stroke="#f0b8c0" stroke-width="1.2"/>
+    <ellipse cx="18" cy="5.5" rx="1.2" ry="0.8" fill="#e8a0b0"/>
+    <ellipse cx="22" cy="5.5" rx="1.2" ry="0.8" fill="#e8a0b0"/>
     <!-- 前蹄 -->
     <ellipse cx="8" cy="17" rx="4.5" ry="3" fill="#fff" stroke="#f0b8c0" stroke-width="1.2"/>
     <ellipse cx="32" cy="17" rx="4.5" ry="3" fill="#fff" stroke="#f0b8c0" stroke-width="1.2"/>
@@ -481,61 +467,61 @@
     <ellipse cx="28" cy="16" rx="4" ry="2.5" fill="#fff" stroke="#e8b4b8" stroke-width="1.2"/>
   </g></g>
 
-  <!-- === 可爱小花（动物之后，不被遮挡）=== -->
-  <!-- 左边缘 粉花 -->
-  <g transform="translate(6, 117)">
+  <!-- === 萤火虫渐变定义 === -->
+  <defs>
+    <radialGradient id="fireflyGlow">
+      <stop offset="0%" stop-color="#ffe060" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#ffe060" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffe060" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- === 可爱小花（全部避开草的位置）=== -->
+  <!-- 左边缘 粉花 (草在35,78) -->
+  <g transform="translate(6, 118)">
     <line x1="2" y1="0" x2="2" y2="8" stroke="#c8d8b0" stroke-width="0.9"/>
-    <circle cx="2" cy="-2" r="3" fill="#ffe0ec"/>
-    <circle cx="2" cy="-2" r="1.2" fill="#ffb8cc"/>
+    <circle cx="2" cy="-2" r="3" fill="#ffe0ec"/><circle cx="2" cy="-2" r="1.2" fill="#ffb8cc"/>
   </g>
-  <!-- 小熊小狗之间 粉花 -->
-  <g transform="translate(58, 119)">
+  <!-- 小熊小狗之间 粉花 (草在35,78,115) -->
+  <g transform="translate(58, 120)">
     <line x1="3" y1="0" x2="3" y2="9" stroke="#c8d8b0" stroke-width="1"/>
-    <circle cx="3" cy="-2" r="3.5" fill="#ffe0ec"/>
-    <circle cx="3" cy="-2" r="1.5" fill="#ffb8cc"/>
+    <circle cx="3" cy="-2" r="3.5" fill="#ffe0ec"/><circle cx="3" cy="-2" r="1.5" fill="#ffb8cc"/>
   </g>
-  <!-- 小狗小猪之间 橙花 -->
-  <g transform="translate(137, 116)">
-    <line x1="4" y1="0" x2="4" y2="8" stroke="#c8d8b0" stroke-width="1"/>
-    <circle cx="0" cy="-2" r="2.5" fill="#fff0e8"/>
-    <circle cx="0" cy="-2" r="1.1" fill="#ff8850"/>
-    <circle cx="8" cy="-2" r="2.5" fill="#fff0e8"/>
-    <circle cx="8" cy="-2" r="1.1" fill="#ff8850"/>
+  <!-- 小狗小猪之间 橙花 (草在115,200) -->
+  <g transform="translate(148, 117)">
+    <line x1="3" y1="0" x2="3" y2="8" stroke="#c8d8b0" stroke-width="1"/>
+    <circle cx="0" cy="-2" r="2.5" fill="#fff0e8"/><circle cx="0" cy="-2" r="1.2" fill="#ff8850"/>
+    <circle cx="6" cy="-2" r="2.5" fill="#fff0e8"/><circle cx="6" cy="-2" r="1.2" fill="#ff8850"/>
   </g>
-  <!-- 小猪小鸡之间 粉花 -->
-  <g transform="translate(222, 118)">
+  <!-- 小猪小鸡之间 粉花 (草在200,250) -->
+  <g transform="translate(226, 119)">
     <line x1="3" y1="0" x2="3" y2="10" stroke="#c8d8b0" stroke-width="1"/>
-    <circle cx="3" cy="-3" r="3.2" fill="#ffe8f0"/>
-    <circle cx="3" cy="-3" r="1.3" fill="#ffd0dd"/>
+    <circle cx="3" cy="-3" r="3.2" fill="#ffe8f0"/><circle cx="3" cy="-3" r="1.3" fill="#ffd0dd"/>
   </g>
-  <!-- 小鸡小兔之间 橙花 -->
-  <g transform="translate(300, 115)">
+  <!-- 小鸡小兔之间 橙花 (草在328) -->
+  <g transform="translate(296, 116)">
     <line x1="3" y1="0" x2="3" y2="7" stroke="#c8d8b0" stroke-width="0.9"/>
-    <circle cx="3" cy="-2" r="2.8" fill="#fff2e8"/>
-    <circle cx="3" cy="-2" r="1.1" fill="#ff8850"/>
+    <circle cx="3" cy="-2" r="2.8" fill="#fff2e8"/><circle cx="3" cy="-2" r="1.1" fill="#ff8850"/>
   </g>
-  <!-- 右边缘 粉花 -->
-  <g transform="translate(388, 119)">
+  <!-- 右边缘 粉花 (草在372) -->
+  <g transform="translate(388, 120)">
     <line x1="2" y1="0" x2="2" y2="7" stroke="#c8d8b0" stroke-width="0.9"/>
-    <circle cx="2" cy="-2" r="2.8" fill="#ffe8f0"/>
-    <circle cx="2" cy="-2" r="1.1" fill="#ffccd8"/>
+    <circle cx="2" cy="-2" r="2.8" fill="#ffe8f0"/><circle cx="2" cy="-2" r="1.1" fill="#ffccd8"/>
   </g>
 
-  <!-- === 小小萤火虫 === -->
-  <circle cx="48" cy="108" r="1.5" fill="#ffe8a0" opacity="0.8"/>
-  <circle cx="48" cy="108" r="3" fill="#ffe8a0" opacity="0.2"/>
-  <circle cx="120" cy="102" r="1.2" fill="#ffe8a0" opacity="0.7"/>
-  <circle cx="120" cy="102" r="2.5" fill="#ffe8a0" opacity="0.18"/>
-  <circle cx="200" cy="106" r="1.8" fill="#ffe8a0" opacity="0.75"/>
-  <circle cx="200" cy="106" r="3.5" fill="#ffe8a0" opacity="0.18"/>
-  <circle cx="280" cy="100" r="1.3" fill="#ffe8a0" opacity="0.7"/>
-  <circle cx="280" cy="100" r="2.8" fill="#ffe8a0" opacity="0.17"/>
-  <circle cx="350" cy="104" r="1.6" fill="#ffe8a0" opacity="0.75"/>
-  <circle cx="350" cy="104" r="3.2" fill="#ffe8a0" opacity="0.2"/>
-  <circle cx="85" cy="112" r="1.1" fill="#ffe8a0" opacity="0.65"/>
-  <circle cx="85" cy="112" r="2.3" fill="#ffe8a0" opacity="0.15"/>
-  <circle cx="315" cy="110" r="1.4" fill="#ffe8a0" opacity="0.7"/>
-  <circle cx="315" cy="110" r="2.8" fill="#ffe8a0" opacity="0.17"/>
+  <!-- === 萤火虫（渐变光圈 + 实心核）=== -->
+  <!-- 每只：光圈 + 亮点 -->
+  <circle cx="44" cy="108" r="4.5" fill="url(#fireflyGlow)"/><circle cx="44" cy="108" r="1.5" fill="#ffe060" opacity="0.9"/>
+  <circle cx="90" cy="102" r="4" fill="url(#fireflyGlow)"/><circle cx="90" cy="102" r="1.3" fill="#ffe060" opacity="0.85"/>
+  <circle cx="130" cy="110" r="3.8" fill="url(#fireflyGlow)"/><circle cx="130" cy="110" r="1.2" fill="#ffe060" opacity="0.8"/>
+  <circle cx="170" cy="104" r="4.5" fill="url(#fireflyGlow)"/><circle cx="170" cy="104" r="1.6" fill="#ffe060" opacity="0.9"/>
+  <circle cx="210" cy="108" r="3.5" fill="url(#fireflyGlow)"/><circle cx="210" cy="108" r="1.1" fill="#ffe060" opacity="0.8"/>
+  <circle cx="255" cy="100" r="4.2" fill="url(#fireflyGlow)"/><circle cx="255" cy="100" r="1.4" fill="#ffe060" opacity="0.85"/>
+  <circle cx="290" cy="112" r="3.8" fill="url(#fireflyGlow)"/><circle cx="290" cy="112" r="1.2" fill="#ffe060" opacity="0.8"/>
+  <circle cx="330" cy="104" r="4" fill="url(#fireflyGlow)"/><circle cx="330" cy="104" r="1.5" fill="#ffe060" opacity="0.9"/>
+  <circle cx="360" cy="110" r="3.5" fill="url(#fireflyGlow)"/><circle cx="360" cy="110" r="1.2" fill="#ffe060" opacity="0.85"/>
+  <circle cx="70" cy="114" r="3.2" fill="url(#fireflyGlow)"/><circle cx="70" cy="114" r="1" fill="#ffe060" opacity="0.75"/>
+  <circle cx="315" cy="106" r="3.5" fill="url(#fireflyGlow)"/><circle cx="315" cy="106" r="1.3" fill="#ffe060" opacity="0.8"/>
 
 </svg>
 
