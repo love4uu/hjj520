@@ -416,6 +416,9 @@
     <circle cx="14" cy="2" r="1.4" fill="#c09098"/>
     <circle cx="22" cy="2" r="1.4" fill="#c09098"/>
     <ellipse cx="18" cy="6" rx="1.5" ry="1" fill="#f0b0b8"/>
+    <!-- 前爪 -->
+    <ellipse cx="8" cy="16" rx="4" ry="2.5" fill="#fff" stroke="#e8b4b8" stroke-width="1.2"/>
+    <ellipse cx="28" cy="16" rx="4" ry="2.5" fill="#fff" stroke="#e8b4b8" stroke-width="1.2"/>
     <circle cx="33" cy="20" r="4" fill="#fff" stroke="#e8b4b8" stroke-width="1"/>
   </g>
 
@@ -627,12 +630,14 @@
   bgm.addEventListener('canplaythrough', () => {
     audioReady = true;
     musicBtn.classList.remove('loading');
-    if (!bgm.paused && !musicBtn.classList.contains('playing')) {
+    // 加载完直接尝试播放
+    bgm.play().then(() => {
       musicBtn.textContent = '🎶';
       musicBtn.classList.add('playing');
-    } else if (bgm.paused) {
+    }).catch(() => {
+      // 浏览器拦截了自动播放，显示暂停图标等用户点
       musicBtn.textContent = '🎵';
-    }
+    });
   }, { once: true });
 
   function startMusic() {
