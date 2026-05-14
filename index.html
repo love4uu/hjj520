@@ -328,7 +328,7 @@
 <body>
 
 <div class="clouds" id="clouds" aria-hidden="true"></div>
-<audio id="bgmAudio" src="bgm.mp3" loop preload="metadata"></audio>
+<audio id="bgmAudio" src="bgm.mp3" loop preload="auto"></audio>
 <button class="music-btn" id="musicBtn" onclick="toggleMusic(event)" title="音乐">🎵</button>
 
 <main class="main-wrap">
@@ -770,26 +770,39 @@
   }
   setTimeout(scheduleCloud, 8000);
 
-  // ---- BGM (April Encounter MP3) ----
+  // ---- BGM ----
   const bgm = document.getElementById('bgmAudio');
   const musicBtn = document.getElementById('musicBtn');
-  let audioReady = false;
-  let userTouched = false; // 用户是否已经交互过
+  let bgmReady = false;
+  let userTouched = false;
 
   musicBtn.textContent = '⏳';
   musicBtn.classList.add('loading');
 
-  bgm.addEventListener('canplaythrough', () => {
-    audioReady = true;
+  function tryAutoPlay() {
+    if (bgmReady) return;
+    bgmReady = true;
     musicBtn.classList.remove('loading');
-    // 静音自动播放 → 浏览器不会拦截
-    bgm.muted = true;
+    // 先尝试非静音播放（回访用户浏览器可能允许）
+    bgm.muted = false;
     bgm.play().then(() => {
-      musicBtn.textContent = '🔇';
+      musicBtn.textContent = '🎶';
+      musicBtn.classList.add('playing');
     }).catch(() => {
-      musicBtn.textContent = '▶️';
+      // 被拦截，静音自动播放
+      bgm.muted = true;
+      bgm.play().then(() => {
+        musicBtn.textContent = '🔇';
+      }).catch(() => {
+        musicBtn.textContent = '▶️';
+      });
     });
-  }, { once: true });
+  }
+
+  // canplay 比 canplaythrough 更早触发，确保快速启动
+  bgm.addEventListener('canplay', tryAutoPlay, { once: true });
+  // 3 秒超时兜底：事件没触发也强行尝试
+  setTimeout(tryAutoPlay, 3000);
 
   function unmuteAndPlay() {
     if (userTouched) return;
@@ -802,29 +815,19 @@
     musicBtn.classList.add('playing');
   }
 
-  function startMusic() {
-    if (!bgm.muted) {
-      bgm.play().catch(() => {});
-      musicBtn.textContent = '🎶';
-      musicBtn.classList.add('playing');
-    } else {
-      unmuteAndPlay();
-    }
-  }
-
-  function stopMusic() {
-    bgm.pause();
-    musicBtn.textContent = '⏸️';
-    musicBtn.classList.remove('playing');
-  }
-
   function toggleMusic(event) {
     event.stopPropagation();
-    if (!audioReady) return;
+    if (!bgmReady) return;
     if (bgm.paused) {
-      startMusic();
+      bgm.muted = false;
+      bgm.play().then(() => {
+        musicBtn.textContent = '🎶';
+        musicBtn.classList.add('playing');
+      }).catch(() => {});
     } else {
-      stopMusic();
+      bgm.pause();
+      musicBtn.textContent = '⏸️';
+      musicBtn.classList.remove('playing');
     }
   }
 
@@ -858,6 +861,15 @@
     lbImg.src = p.full;
     lbImg.alt = p.alt;
     lbCounter.textContent = (lbIndex + 1) + ' / ' + lbPhotos.length;
+    preloadAdjacent();
+  }
+
+  function preloadAdjacent() {
+    [lbIndex - 1, lbIndex + 1].forEach(i => {
+      if (i >= 0 && i < lbPhotos.length) {
+        (new Image()).src = lbPhotos[i].full;
+      }
+    });
   }
 
   function navigateLightbox(delta) {
