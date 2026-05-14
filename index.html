@@ -278,51 +278,6 @@
     .mod-body { transition: none !important; }
   }
 
-  /* ---- 大图模态框 ---- */
-  .lightbox {
-    position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.88);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.25s;
-  }
-  .lightbox.show { opacity: 1; pointer-events: auto; }
-  .lightbox img {
-    max-width: 92vw; max-height: 85vh;
-    object-fit: contain; border-radius: 8px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-    cursor: default;
-  }
-  .lightbox-close {
-    position: absolute; top: max(16px, env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
-    width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(255,255,255,0.15); border: none;
-    color: #fff; font-size: 22px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
-  }
-  .lightbox-close:active { background: rgba(255,255,255,0.3); }
-  .lightbox-nav {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(255,255,255,0.12); border: none;
-    color: #fff; font-size: 24px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
-  }
-  .lightbox-nav:active { background: rgba(255,255,255,0.25); }
-  .lightbox-prev { left: max(8px, env(safe-area-inset-left, 0px)); }
-  .lightbox-next { right: max(8px, env(safe-area-inset-right, 0px)); }
-  .lightbox-counter {
-    position: absolute; bottom: max(24px, env(safe-area-inset-bottom, 0px));
-    left: 50%; transform: translateX(-50%);
-    color: rgba(255,255,255,0.6); font-size: 14px;
-  }
-  .photo-thumb {
-    cursor: pointer; transition: transform 0.2s;
-  }
-  .photo-thumb:hover { transform: scale(1.03); }
-  .photo-thumb:active { transform: scale(0.97); }
 </style>
 </head>
 <body>
@@ -364,22 +319,21 @@
     </button>
     <div class="mod-body">
       <div class="photo-grid" id="photoGrid">
-        <img src="photo1_thumb.webp" data-full="photo1.jpg" alt="合照1" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(0)">
-        <img src="photo2_thumb.webp" data-full="photo2.jpg" alt="合照2" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(1)">
-        <img src="photo3_thumb.webp" data-full="photo3.jpg" alt="合照3" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(2)">
-        <img src="photo4_thumb.webp" data-full="photo4.jpg" alt="合照4" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(3)">
-        <img src="photo5_thumb.webp" data-full="photo5.jpg" alt="合照5" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(4)">
-        <img src="photo6_thumb.webp" data-full="photo6.jpg" alt="合照6" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(5)">
-        <img src="photo7_thumb.webp" data-full="photo7.jpg" alt="合照7" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(6)">
-        <img src="photo8_thumb.webp" data-full="photo8.jpg" alt="合照8" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(7)">
-        <img src="photo9_thumb.webp" data-full="photo9.jpg" alt="合照9" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(8)">
-        <img src="photo10_thumb.webp" data-full="photo10.jpg" alt="合照10" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(9)">
-        <img src="photo11_thumb.webp" data-full="photo11.jpg" alt="合照11" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(10)">
-        <img src="photo12_thumb.webp" data-full="photo12.jpg" alt="合照12" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(11)">
-        <img src="photo13_thumb.webp" data-full="photo13.jpg" alt="合照13" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(12)">
-        <img src="photo14_thumb.webp" data-full="photo14.jpg" alt="合照14" loading="lazy" width="200" height="150" class="photo-thumb" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;" onclick="openLightbox(13)">
+        <img src="photo1_thumb.webp" alt="合照1" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo2_thumb.webp" alt="合照2" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo3_thumb.webp" alt="合照3" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo4_thumb.webp" alt="合照4" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo5_thumb.webp" alt="合照5" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo6_thumb.webp" alt="合照6" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo7_thumb.webp" alt="合照7" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo8_thumb.webp" alt="合照8" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo9_thumb.webp" alt="合照9" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo10_thumb.webp" alt="合照10" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo11_thumb.webp" alt="合照11" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo12_thumb.webp" alt="合照12" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo13_thumb.webp" alt="合照13" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
+        <img src="photo14_thumb.webp" alt="合照14" loading="lazy" width="200" height="150" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;">
       </div>
-      <p class="tip-text">💝 点击照片查看大图</p>
     </div>
   </div>
 
@@ -397,7 +351,6 @@
         poster="poster.webp"
         style="width:100%;border-radius:16px;aspect-ratio:16/10;object-fit:contain;background:#000;"
         preload="none"></video>
-      <p class="tip-text">🎁 录一段想对她说的话吧</p>
     </div>
   </div>
 
@@ -422,13 +375,6 @@
 </main>
 
 <!-- 大图模态框 -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox(event)" aria-hidden="true">
-  <button class="lightbox-close" onclick="closeLightbox()" aria-label="关闭">✕</button>
-  <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();navigateLightbox(-1)" aria-label="上一张">‹</button>
-  <img id="lightboxImg" src="" alt="">
-  <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();navigateLightbox(1)" aria-label="下一张">›</button>
-  <div class="lightbox-counter" id="lightboxCounter"></div>
-</div>
 
 <!-- 底部场景：小动物 + 简笔小草 + 极简地面线 -->
 <svg class="bottom-animals" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -606,23 +552,12 @@
     if (!isOpen) {
       mod.classList.add('open');
       if (btn) btn.setAttribute('aria-expanded', 'true');
-      try { localStorage.setItem('openModule', id); } catch (e) {}
     } else {
       if (btn) btn.setAttribute('aria-expanded', 'false');
-      try { localStorage.removeItem('openModule'); } catch (e) {}
+      
     }
   }
 
-  // 记忆上次展开的模块
-  (function restoreModule() {
-    try {
-      const saved = localStorage.getItem('openModule');
-      if (saved) {
-        const mod = document.getElementById(saved);
-        if (mod) { mod.classList.add('open'); mod.querySelector('.mod-btn')?.setAttribute('aria-expanded', 'true'); }
-      }
-    } catch (e) {}
-  })();
 
   // ---- 密度可控的飘落爱心 ----
   const heartsEmoji = ['💖', '💕', '💗', '🌸', '✨', '💝'];
@@ -836,61 +771,6 @@
     if (!userTouched) unmuteAndPlay();
   }, { once: true });
 
-  // ---- 大图模态框 ----
-  const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lightboxImg');
-  const lbCounter = document.getElementById('lightboxCounter');
-  let lbIndex = 0;
-  let lbPhotos = [];
-
-  function openLightbox(idx) {
-    const grid = document.getElementById('photoGrid');
-    lbPhotos = Array.from(grid.querySelectorAll('img[data-full]')).map(img => ({
-      full: img.getAttribute('data-full'),
-      alt: img.alt
-    }));
-    lbIndex = idx;
-    showPhoto();
-    lb.classList.add('show');
-    lb.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function showPhoto() {
-    const p = lbPhotos[lbIndex];
-    lbImg.src = p.full;
-    lbImg.alt = p.alt;
-    lbCounter.textContent = (lbIndex + 1) + ' / ' + lbPhotos.length;
-    preloadAdjacent();
-  }
-
-  function preloadAdjacent() {
-    [lbIndex - 1, lbIndex + 1].forEach(i => {
-      if (i >= 0 && i < lbPhotos.length) {
-        (new Image()).src = lbPhotos[i].full;
-      }
-    });
-  }
-
-  function navigateLightbox(delta) {
-    lbIndex = (lbIndex + delta + lbPhotos.length) % lbPhotos.length;
-    showPhoto();
-  }
-
-  function closeLightbox(e) {
-    if (e && e.target !== lb && e.target !== lbImg) return;
-    lb.classList.remove('show');
-    lb.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    setTimeout(() => { lbImg.src = ''; }, 300);
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (!lb.classList.contains('show')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') navigateLightbox(-1);
-    if (e.key === 'ArrowRight') navigateLightbox(1);
-  });
 </script>
 
 </body>
