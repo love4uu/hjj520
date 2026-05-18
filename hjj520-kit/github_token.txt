@@ -1,0 +1,7 @@
+请在此粘贴你的 GitHub Personal Access Token（只保留 token，其他内容删除）
+
+获取方式：
+1. 打开 https://github.com/settings/tokens
+2. 点击 Generate new token (classic)
+3. 勾选 repo 权限
+4. 生成后粘贴到这里

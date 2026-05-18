@@ -1,0 +1,246 @@
+<!--
+  ╔══════════════════════════════════════╗
+  ║  表白网站模板 — 配置区              ║
+  ║  搜 {{ 即可找到所有需修改的地方     ║
+  ╚══════════════════════════════════════╝
+
+  变量说明：
+  {{NAME}}        = 她的名字/昵称
+  {{TITLE}}       = 标题文案（如 5201314）
+  {{LETTER}}      = 情书正文
+  {{REPO}}        = 仓库名（即 love）
+  {{FOLDER}}      = 客户文件夹名（网址后缀）
+  {{PHOTO_COUNT}} = 照片数量
+  {{BGM_SRC}}     = BGM 路径（自带用 bgm.mp3，默认用 ../shared/bgm.mp3）
+  {{PHOTOS}}      = 照片 img 标签列表（自动生成）
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For {{NAME}} | {{TITLE}}</title>
+<meta name="description" content="{{NAME}}，{{TITLE}} — 一份特别的礼物">
+<meta property="og:title" content="For {{NAME}} | {{TITLE}}">
+<meta property="og:description" content="{{NAME}}，{{TITLE}} — 一份特别的礼物">
+<meta property="og:image" content="https://love4uu.github.io/{{REPO}}/{{FOLDER}}/photo1_thumb.webp">
+<meta property="og:url" content="https://love4uu.github.io/{{REPO}}/{{FOLDER}}/">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #ffd6e3 0%, #ffe4ec 25%, #fff0f5 55%, #fefbfc 85%, #ffffff 100%);
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    display: flex; justify-content: center;
+    padding: 24px 16px 80px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; -webkit-user-select: none; cursor: default;
+  }
+  /* ---- 云朵装饰 ---- */
+  .clouds { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+  .cloud-wrap { position: absolute; opacity: 0.65; }
+  @keyframes drift { 0% { transform: translateX(-200px); } 100% { transform: translateX(calc(100vw + 200px)); } }
+  .cloud-blob { position: absolute; background: rgba(255,255,255,0.75); border-radius: 50%; }
+  /* ---- 飘落小心心 ---- */
+  @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 90% { opacity: 0.6; } 100% { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
+  .falling-heart { position: fixed; pointer-events: none; z-index: 1; font-size: 22px; animation: fall linear infinite; }
+  /* ---- 主容器 ---- */
+  .main-wrap { position: relative; z-index: 2; width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; gap: 20px; animation: fadeInUp 0.8s ease-out; }
+  @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(24px); } 100% { opacity: 1; transform: translateY(0); } }
+  /* ---- 头部 ---- */
+  .header { text-align: center; margin-bottom: 4px; }
+  .header .icon-row { margin-bottom: 8px; animation: bounce 2s ease-in-out infinite; }
+  .header .icon-row svg { width: 44px; height: 44px; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .header .title-line1 { font-family: 'KaiTi','STKaiti','FangSong',cursive,sans-serif; font-size: 38px; font-weight: 700; color: #e8456b; letter-spacing: 6px; text-shadow: 0 2px 8px rgba(232,69,107,0.15); line-height: 1.1; }
+  .header .title-line2 { font-family: 'KaiTi','STKaiti','FangSong',cursive,sans-serif; font-size: 30px; font-weight: 600; color: #ff7b9c; letter-spacing: 4px; text-shadow: 0 2px 6px rgba(255,123,156,0.2); }
+  /* ---- 模块卡片 ---- */
+  .module { width: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 28px; box-shadow: 0 8px 32px rgba(255,120,150,0.12), 0 2px 0 rgba(255,255,255,0.8) inset; overflow: hidden; transition: border-color 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s cubic-bezier(0.34,1.56,0.64,1); border: 2.5px solid transparent; }
+  .module.open { border-color: rgba(255,140,160,0.3); box-shadow: 0 12px 40px rgba(255,120,150,0.2), 0 2px 0 rgba(255,255,255,0.8) inset; }
+  .mod-btn { width: 100%; padding: 20px 24px; display: flex; align-items: center; gap: 14px; background: none; border: none; cursor: pointer; font-family: inherit; transition: background 0.2s; }
+  .mod-btn:active { background: rgba(255,120,150,0.06); }
+  .mod-icon { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+  .mod-icon.photos { background: #fff0f5; } .mod-icon.video { background: #fff5ee; } .mod-icon.letter { background: #f5f0ff; }
+  .mod-info { text-align: left; flex: 1; }
+  .mod-info .mod-title { font-size: 20px; font-weight: 700; color: #d4446a; letter-spacing: 1px; }
+  .mod-arrow { font-size: 18px; color: #e8a0b5; transition: transform 0.35s; }
+  .module.open .mod-arrow { transform: rotate(180deg); }
+  /* ---- 模块内容区 ---- */
+  .mod-body { max-height: 0; overflow: hidden; transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), padding 0.35s; padding: 0 24px; }
+  .module.open .mod-body { max-height: 70vh; overflow-y: auto; padding: 0 24px 24px; }
+  .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  /* ---- 信区 ---- */
+  .letter-card { background: linear-gradient(135deg,#fffdf5,#fff8f0); border-radius: 16px; padding: 20px; border: 1.5px solid #ffe8d0; font-size: 15px; color: #a07060; line-height: 1.8; position: relative; }
+  .letter-card::before { content: '💌'; position: absolute; top: -16px; right: 16px; font-size: 28px; }
+  /* ---- 音乐按钮 ---- */
+  .music-btn { position: fixed; top: max(20px, env(safe-area-inset-top,0px)); right: max(20px, env(safe-area-inset-right,0px)); z-index: 30; width: 44px; height: 44px; border-radius: 50%; border: 2px solid #ff8ba0; background: rgba(255,140,160,0.18); backdrop-filter: blur(10px); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255,120,150,0.15); transition: all 0.3s; }
+  .music-btn.loading { border-color: #ffb3c0; cursor: default; animation: spin 1.2s linear infinite; }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  .music-btn.playing { border-color: #ff4d6d; background: rgba(255,100,130,0.22); animation: musicGlow 2s ease-in-out infinite; }
+  @keyframes musicGlow { 0%,100% { box-shadow: 0 4px 12px rgba(255,100,130,0.15); } 50% { box-shadow: 0 4px 24px rgba(255,100,130,0.4); } }
+  /* ---- 底部小动物 ---- */
+  .bottom-animals { position: fixed; bottom: 0; left: 0; width: 100%; height: 28vh; pointer-events: none; z-index: 1; opacity: 0.7; }
+  .breathe { animation: animalBreath 4s ease-in-out infinite; transform-origin: center bottom; }
+  @keyframes animalBreath { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.04); } }
+  @media (prefers-reduced-motion: reduce) { .cloud-wrap,.falling-heart,.header .icon-row,.breathe { animation: none !important; } .music-btn.playing { animation: none; } .mod-body { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="clouds" id="clouds" aria-hidden="true"></div>
+<audio id="bgmAudio" src="{{BGM_SRC}}" loop preload="auto"></audio>
+<button class="music-btn" id="musicBtn" onclick="toggleMusic(event)" title="音乐">🎵</button>
+
+<main class="main-wrap">
+  <header class="header">
+    <div class="icon-row">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="heartGlow" cx="40%" cy="30%"><stop offset="0%" stop-color="#ff6b81"/><stop offset="100%" stop-color="#d63348"/></radialGradient><filter id="heartShadow"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#e8456b" flood-opacity="0.35"/></filter></defs><path d="M24,10 C24,2 14,0 10,8 C6,16 24,28 24,28 C24,28 42,16 38,8 C34,0 24,2 24,10Z" fill="url(#heartGlow)" filter="url(#heartShadow)" stroke="none"/><path d="M24,22 C24,22 10,12 8,8 C6,4 10,2 12,4 C16,8 24,12 24,12" fill="#ff9db0" opacity="0.5"/></svg>
+    </div>
+    <div class="title-line1">{{NAME}}</div>
+    <div class="title-line2">{{TITLE}}</div>
+  </header>
+
+  <!-- 模块1: with u -->
+  <div class="module" id="modPhotos">
+    <button class="mod-btn" onclick="toggleModule('modPhotos')" aria-expanded="false" aria-label="打开相册">
+      <div class="mod-icon photos">📸</div><div class="mod-info"><div class="mod-title">with u</div></div>
+      <span class="mod-arrow">▼</span>
+    </button>
+    <div class="mod-body">
+      <div class="photo-grid">
+<!-- {{PHOTOS}} -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块2: gift -->
+  <div class="module" id="modVideo">
+    <button class="mod-btn" onclick="toggleModule('modVideo')" aria-expanded="false" aria-label="打开礼物视频">
+      <div class="mod-icon video">🎁</div><div class="mod-info"><div class="mod-title">gift</div></div>
+      <span class="mod-arrow">▼</span>
+    </button>
+    <div class="mod-body">
+      <video src="video.mp4" controls playsinline poster="poster.webp" style="width:100%;border-radius:16px;aspect-ratio:16/10;object-fit:contain;background:#000;" preload="none"></video>
+    </div>
+  </div>
+
+  <!-- 模块3: letter -->
+  <div class="module" id="modLetter">
+    <button class="mod-btn" onclick="toggleModule('modLetter')" aria-expanded="false" aria-label="打开情书">
+      <div class="mod-icon letter">💌</div><div class="mod-info"><div class="mod-title">letter</div></div>
+      <span class="mod-arrow">▼</span>
+    </button>
+    <div class="mod-body">
+      <div class="letter-card"><p>{{LETTER}}</p></div>
+    </div>
+  </div>
+</main>
+
+<!-- 底部场景：小动物 + 简笔小草 + 极简地面线 -->
+<svg class="bottom-animals" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path d="M0,128 Q60,135 120,126 Q180,118 240,124 Q300,130 360,120 Q390,116 400,119" fill="none" stroke="#d8c8ce" stroke-width="1.2" stroke-linecap="round"/>
+  <g transform="translate(35,124)" stroke="#c8dbb8" stroke-width="1.1" fill="none" stroke-linecap="round"><path d="M0,0 Q3,-10 1,-18"/><path d="M0,0 Q-2,-12 -4,-20"/><path d="M0,0 Q6,-8 8,-14"/></g>
+  <g transform="translate(78,126)" stroke="#bcd0a8" stroke-width="1" fill="none" stroke-linecap="round"><path d="M0,0 Q-3,-14 -5,-22"/><path d="M0,0 Q2,-10 3,-16"/></g>
+  <g transform="translate(115,124)" stroke="#c8d8b0" stroke-width="1" fill="none" stroke-linecap="round"><path d="M0,0 Q-4,-8 -6,-14"/><path d="M0,0 Q2,-12 1,-20"/><path d="M0,0 Q6,-6 9,-10"/></g>
+  <g transform="translate(250,125)" stroke="#bcd0a8" stroke-width="1.1" fill="none" stroke-linecap="round"><path d="M0,0 Q-4,-11 -3,-19"/><path d="M0,0 Q3,-9 5,-15"/></g>
+  <g transform="translate(328,124)" stroke="#c8dbb8" stroke-width="1" fill="none" stroke-linecap="round"><path d="M0,0 Q-2,-10 -1,-16"/><path d="M0,0 Q5,-13 7,-21"/><path d="M0,0 Q2,-8 1,-12"/></g>
+  <g transform="translate(372,124)" stroke="#b8cca0" stroke-width="1.1" fill="none" stroke-linecap="round"><path d="M0,0 Q-2,-16 -1,-24"/><path d="M0,0 Q4,-9 6,-14"/><path d="M0,0 Q-5,-6 -8,-10"/></g>
+  <g transform="translate(200,126)" stroke="#c0d4ac" stroke-width="0.9" fill="none" stroke-linecap="round"><path d="M0,0 Q-1,-14 -3,-20"/><path d="M0,0 Q3,-8 4,-12"/></g>
+  <!-- 小熊 -->
+  <g transform="translate(14,90)"><g class="breathe"><ellipse cx="22" cy="24" rx="18" ry="16" fill="#fff" stroke="#e8b4b8" stroke-width="1.8"/><circle cx="22" cy="3" r="13" fill="#fff" stroke="#e8b4b8" stroke-width="1.8"/><circle cx="10" cy="-7" r="6" fill="#fff" stroke="#e8b4b8" stroke-width="1.5"/><circle cx="10" cy="-7" r="3.5" fill="#ffe8d0"/><circle cx="34" cy="-7" r="6" fill="#fff" stroke="#e8b4b8" stroke-width="1.5"/><circle cx="34" cy="-7" r="3.5" fill="#ffe8d0"/><circle cx="17" cy="1" r="1.6" fill="#c09098"/><circle cx="27" cy="1" r="1.6" fill="#c09098"/><ellipse cx="22" cy="6" rx="2.5" ry="1.8" fill="#e8b098"/><path d="M22,8 Q18,12 16,10" fill="none" stroke="#e8b4b8" stroke-width="1"/><path d="M22,8 Q26,12 28,10" fill="none" stroke="#e8b4b8" stroke-width="1"/></g></g>
+  <!-- 小狗 -->
+  <g transform="translate(95,93)"><g class="breathe"><ellipse cx="22" cy="22" rx="17" ry="14" fill="#fff" stroke="#e8c8a0" stroke-width="1.8"/><circle cx="22" cy="2" r="12" fill="#fff" stroke="#e8c8a0" stroke-width="1.8"/><ellipse cx="8" cy="-2" rx="6" ry="10" fill="#ffe8d0" stroke="#e8c8a0" stroke-width="1.3" transform="rotate(10 8 -2)"/><ellipse cx="36" cy="-2" rx="6" ry="10" fill="#ffe8d0" stroke="#e8c8a0" stroke-width="1.3" transform="rotate(-10 36 -2)"/><circle cx="17" cy="0" r="1.5" fill="#a08060"/><circle cx="27" cy="0" r="1.5" fill="#a08060"/><ellipse cx="22" cy="5" rx="2.5" ry="2" fill="#c8a080"/><path d="M38,18 Q48,8 42,-2" fill="none" stroke="#e8c8a0" stroke-width="2" stroke-linecap="round"/></g></g>
+  <!-- 小猪 -->
+  <g transform="translate(178,94)"><g class="breathe"><ellipse cx="20" cy="20" rx="17" ry="14" fill="#fff" stroke="#f0b8c0" stroke-width="1.8"/><circle cx="20" cy="2" r="12" fill="#fff" stroke="#f0b8c0" stroke-width="1.8"/><ellipse cx="8" cy="-7" rx="5" ry="7" fill="#ffe0e8" stroke="#f0b8c0" stroke-width="1.2" transform="rotate(15 8 -7)"/><ellipse cx="32" cy="-7" rx="5" ry="7" fill="#ffe0e8" stroke="#f0b8c0" stroke-width="1.2" transform="rotate(-15 32 -7)"/><circle cx="15" cy="0" r="1.5" fill="#c09098"/><circle cx="25" cy="0" r="1.5" fill="#c09098"/><ellipse cx="20" cy="6" rx="5.5" ry="4" fill="#ffe0e8" stroke="#f0b8c0" stroke-width="1.2"/><circle cx="17" cy="6" r="1.5" fill="#e8a0b0"/><circle cx="23" cy="6" r="1.5" fill="#e8a0b0"/><ellipse cx="8" cy="17" rx="4.5" ry="3" fill="#fff" stroke="#f0b8c0" stroke-width="1.2"/><ellipse cx="32" cy="17" rx="4.5" ry="3" fill="#fff" stroke="#f0b8c0" stroke-width="1.2"/></g></g>
+  <!-- 小鸡 -->
+  <g transform="translate(262,105)"><g class="breathe"><circle cx="18" cy="18" r="14" fill="#fff" stroke="#f0d080" stroke-width="1.8"/><path d="M12,6 Q10,0 14,3 Q16,-2 18,4 Q20,-1 22,3 Q26,0 24,6" fill="#ffd080" stroke="#f0c060" stroke-width="1"/><circle cx="15" cy="14" r="1.3" fill="#c09050"/><circle cx="21" cy="14" r="1.3" fill="#c09050"/><polygon points="18,17 15,19 18,21" fill="#ffa040"/><ellipse cx="8" cy="18" rx="5" ry="3.5" fill="#fff8e0" stroke="#f0d080" stroke-width="1" transform="rotate(-15 8 18)"/><ellipse cx="28" cy="18" rx="5" ry="3.5" fill="#fff8e0" stroke="#f0d080" stroke-width="1" transform="rotate(15 28 18)"/></g></g>
+  <!-- 小兔 -->
+  <g transform="translate(348,100)"><g class="breathe"><ellipse cx="18" cy="18" rx="14" ry="11" fill="#fff" stroke="#e8b4b8" stroke-width="1.8"/><circle cx="18" cy="3" r="10" fill="#fff" stroke="#e8b4b8" stroke-width="1.8"/><ellipse cx="12" cy="-14" rx="4.5" ry="13" fill="#fff" stroke="#e8b4b8" stroke-width="1.4"/><ellipse cx="12" cy="-14" rx="2.5" ry="10" fill="#ffdde4"/><ellipse cx="24" cy="-14" rx="4.5" ry="13" fill="#fff" stroke="#e8b4b8" stroke-width="1.4"/><ellipse cx="24" cy="-14" rx="2.5" ry="10" fill="#ffdde4"/><circle cx="14" cy="2" r="1.4" fill="#c09098"/><circle cx="22" cy="2" r="1.4" fill="#c09098"/><ellipse cx="18" cy="6" rx="1.5" ry="1" fill="#f0b0b8"/><ellipse cx="8" cy="16" rx="4" ry="2.5" fill="#fff" stroke="#e8b4b8" stroke-width="1.2"/><ellipse cx="28" cy="16" rx="4" ry="2.5" fill="#fff" stroke="#e8b4b8" stroke-width="1.2"/></g></g>
+  <defs><radialGradient id="fireflyGlow"><stop offset="0%" stop-color="#ffe060" stop-opacity="1"/><stop offset="40%" stop-color="#ffe060" stop-opacity="0.5"/><stop offset="100%" stop-color="#ffe060" stop-opacity="0"/></radialGradient></defs>
+  <!-- 小花 -->
+  <g transform="translate(6,118)"><line x1="2" y1="0" x2="2" y2="8" stroke="#c8d8b0" stroke-width="0.9"/><circle cx="2" cy="-2" r="3" fill="#ffe0ec"/><circle cx="2" cy="-2" r="1.2" fill="#ffb8cc"/></g>
+  <g transform="translate(58,120)"><line x1="3" y1="0" x2="3" y2="9" stroke="#c8d8b0" stroke-width="1"/><circle cx="3" cy="-2" r="3.5" fill="#ffe0ec"/><circle cx="3" cy="-2" r="1.5" fill="#ffb8cc"/></g>
+  <g transform="translate(148,117)"><line x1="3" y1="0" x2="3" y2="8" stroke="#c8d8b0" stroke-width="1"/><circle cx="0" cy="-2" r="2.5" fill="#fff0e8"/><circle cx="0" cy="-2" r="1.2" fill="#ff8850"/><circle cx="6" cy="-2" r="2.5" fill="#fff0e8"/><circle cx="6" cy="-2" r="1.2" fill="#ff8850"/></g>
+  <g transform="translate(226,119)"><line x1="3" y1="0" x2="3" y2="10" stroke="#c8d8b0" stroke-width="1"/><circle cx="3" cy="-3" r="3.2" fill="#ffe8f0"/><circle cx="3" cy="-3" r="1.3" fill="#ffd0dd"/></g>
+  <g transform="translate(296,116)"><line x1="3" y1="0" x2="3" y2="7" stroke="#c8d8b0" stroke-width="0.9"/><circle cx="3" cy="-2" r="2.8" fill="#fff2e8"/><circle cx="3" cy="-2" r="1.1" fill="#ff8850"/></g>
+  <g transform="translate(388,120)"><line x1="2" y1="0" x2="2" y2="7" stroke="#c8d8b0" stroke-width="0.9"/><circle cx="2" cy="-2" r="2.8" fill="#ffe8f0"/><circle cx="2" cy="-2" r="1.1" fill="#ffccd8"/></g>
+  <!-- 萤火虫 -->
+  <circle cx="44" cy="108" r="4.5" fill="url(#fireflyGlow)"/><circle cx="44" cy="108" r="1.5" fill="#ffe060" opacity="0.9"/>
+  <circle cx="90" cy="102" r="4" fill="url(#fireflyGlow)"/><circle cx="90" cy="102" r="1.3" fill="#ffe060" opacity="0.85"/>
+  <circle cx="130" cy="110" r="3.8" fill="url(#fireflyGlow)"/><circle cx="130" cy="110" r="1.2" fill="#ffe060" opacity="0.8"/>
+  <circle cx="170" cy="104" r="4.5" fill="url(#fireflyGlow)"/><circle cx="170" cy="104" r="1.6" fill="#ffe060" opacity="0.9"/>
+  <circle cx="210" cy="108" r="3.5" fill="url(#fireflyGlow)"/><circle cx="210" cy="108" r="1.1" fill="#ffe060" opacity="0.8"/>
+  <circle cx="255" cy="100" r="4.2" fill="url(#fireflyGlow)"/><circle cx="255" cy="100" r="1.4" fill="#ffe060" opacity="0.85"/>
+  <circle cx="290" cy="112" r="3.8" fill="url(#fireflyGlow)"/><circle cx="290" cy="112" r="1.2" fill="#ffe060" opacity="0.8"/>
+  <circle cx="330" cy="104" r="4" fill="url(#fireflyGlow)"/><circle cx="330" cy="104" r="1.5" fill="#ffe060" opacity="0.9"/>
+  <circle cx="360" cy="110" r="3.5" fill="url(#fireflyGlow)"/><circle cx="360" cy="110" r="1.2" fill="#ffe060" opacity="0.85"/>
+  <circle cx="70" cy="114" r="3.2" fill="url(#fireflyGlow)"/><circle cx="70" cy="114" r="1" fill="#ffe060" opacity="0.75"/>
+  <circle cx="315" cy="106" r="3.5" fill="url(#fireflyGlow)"/><circle cx="315" cy="106" r="1.3" fill="#ffe060" opacity="0.8"/>
+</svg>
+
+<script>
+  function toggleModule(id) {
+    const mod = document.getElementById(id);
+    const btn = mod.querySelector('.mod-btn');
+    const isOpen = mod.classList.contains('open');
+    document.querySelectorAll('.module.open').forEach(m => {
+      m.classList.remove('open');
+      const b = m.querySelector('.mod-btn');
+      if (b) b.setAttribute('aria-expanded','false');
+    });
+    if (!isOpen) { mod.classList.add('open'); if (btn) btn.setAttribute('aria-expanded','true'); }
+    else { if (btn) btn.setAttribute('aria-expanded','false'); }
+  }
+
+  const heartsEmoji = ['💖','💕','💗','🌸','✨','💝'];
+  const HEART_INIT = 25, HEART_MAX = 50;
+  let heartCount = 0;
+  function spawnHeart() {
+    if (heartCount >= HEART_MAX) return; heartCount++;
+    const el = document.createElement('span'); el.className = 'falling-heart';
+    el.setAttribute('aria-hidden','true');
+    el.textContent = heartsEmoji[Math.floor(Math.random()*heartsEmoji.length)];
+    el.style.left = Math.random()*95+'%'; el.style.fontSize = (16+Math.random()*24)+'px';
+    el.style.animationDuration = (8+Math.random()*12)+'s'; el.style.animationDelay = Math.random()*3+'s';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => { el.remove(); heartCount--; });
+  }
+  for (let i=0;i<HEART_INIT;i++) spawnHeart();
+  function scheduleHeart() {
+    if (heartCount>=HEART_MAX) { setTimeout(scheduleHeart,1000); return; }
+    spawnHeart(); setTimeout(scheduleHeart, 800+(heartCount/HEART_MAX)*4000);
+  }
+  setTimeout(scheduleHeart,2000);
+
+  const clouds = document.getElementById('clouds');
+  const cloudShapes = [
+    (s) => { const o=s*0.6; return {w:s*1.6,h:s*0.65,offY:0,blobs:[{w:s,h:s*0.55,x:o+s*0.3,y:s*0.2},{w:s*0.75,h:s*0.7,x:o+s*0.15,y:s*0.05},{w:s*0.7,h:s*0.65,x:o+s*0.65,y:s*0.02},{w:s*0.55,h:s*0.5,x:o+s*0.05,y:s*0.18},{w:s*0.5,h:s*0.45,x:o+s*0.85,y:s*0.12},{w:s*0.35,h:s*0.35,x:o,y:s*0.22}]}; },
+    (s) => { const o=s*0.55; return {w:s*1.7,h:s*1.0,offY:s*0.15,blobs:[{w:s*1.05,h:s*0.8,x:o+s*0.25,y:s*0.1},{w:s*0.85,h:s*0.85,x:o+s*0.05,y:s*0.0},{w:s*0.75,h:s*0.75,x:o+s*0.55,y:s*0.02},{w:s*0.55,h:s*0.5,x:o,y:s*0.2},{w:s*0.5,h:s*0.45,x:o+s*0.85,y:s*0.1}]}; },
+    (s) => { const o=s*0.4; return {w:s*1.3,h:s*0.6,offY:0,blobs:[{w:s*0.9,h:s*0.5,x:o+s*0.2,y:s*0.2},{w:s*0.65,h:s*0.6,x:o+s*0.05,y:s*0.05},{w:s*0.55,h:s*0.55,x:o+s*0.55,y:s*0.04},{w:s*0.4,h:s*0.4,x:o,y:s*0.15}]}; },
+    (s) => { const o=s*0.5; return {w:s*2.0,h:s*0.55,offY:0,blobs:[{w:s,h:s*0.5,x:o+s*0.4,y:s*0.15},{w:s*0.7,h:s*0.65,x:o+s*0.2,y:s*0.05},{w:s*0.65,h:s*0.6,x:o+s*0.7,y:s*0.02},{w:s*0.55,h:s*0.55,x:o+s*0.05,y:s*0.1},{w:s*0.5,h:s*0.5,x:o+s*0.95,y:s*0.08},{w:s*0.35,h:s*0.35,x:o+s*0.85,y:s*0.2},{w:s*0.3,h:s*0.3,x:o+s*0.15,y:s*0.18}]}; }
+  ];
+  function spawnCloud() {
+    const wrap=document.createElement('div'); wrap.className='cloud-wrap';
+    const s=35+Math.random()*65, shape=cloudShapes[Math.floor(Math.random()*cloudShapes.length)](s);
+    wrap.style.width=shape.w+'px'; wrap.style.height=shape.h+'px'; wrap.style.top=(5+Math.random()*60-shape.offY)+'%';
+    shape.blobs.forEach(b=>{const e=document.createElement('span');e.className='cloud-blob';e.style.width=b.w+'px';e.style.height=b.h+'px';e.style.left=b.x+'px';e.style.top=b.y+'px';wrap.appendChild(e);});
+    const dur=35+Math.random()*55; wrap.style.animation=`drift ${dur}s linear infinite`; wrap.style.animationDelay=-(Math.random()*dur)+'s';
+    clouds.appendChild(wrap);
+  }
+  const CLOUD_INIT=14, CLOUD_MAX=28; let cloudCount=0;
+  for(let i=0;i<CLOUD_INIT;i++){spawnCloud();cloudCount++;}
+  function scheduleCloud(){if(cloudCount>=CLOUD_MAX){setTimeout(scheduleCloud,2000);return;}spawnCloud();cloudCount++;setTimeout(scheduleCloud,5000+(cloudCount/CLOUD_MAX)*15000);}
+  setTimeout(scheduleCloud,8000);
+
+  const bgm=document.getElementById('bgmAudio'), musicBtn=document.getElementById('musicBtn');
+  let bgmReady=false, userTouched=false;
+  musicBtn.textContent='⏳'; musicBtn.classList.add('loading');
+  function tryAutoPlay(){if(bgmReady)return;bgmReady=true;musicBtn.classList.remove('loading');bgm.muted=false;bgm.play().then(()=>{musicBtn.textContent='🎶';musicBtn.classList.add('playing');}).catch(()=>{bgm.muted=true;bgm.play().then(()=>{musicBtn.textContent='🔇';}).catch(()=>{musicBtn.textContent='▶️';});});}
+  bgm.addEventListener('canplay',tryAutoPlay,{once:true}); setTimeout(tryAutoPlay,3000);
+  function unmuteAndPlay(){if(userTouched)return;userTouched=true;if(bgm.muted){bgm.muted=false;bgm.play().catch(()=>{});}musicBtn.textContent='🎶';musicBtn.classList.add('playing');}
+  function toggleMusic(e){e.stopPropagation();if(!bgmReady)return;if(bgm.paused){bgm.muted=false;bgm.play().then(()=>{musicBtn.textContent='🎶';musicBtn.classList.add('playing');}).catch(()=>{});}else{bgm.pause();musicBtn.textContent='⏸️';musicBtn.classList.remove('playing');}}
+  document.addEventListener('click',(e)=>{if(!userTouched)unmuteAndPlay();},{once:true});
+</script>
+</body>
+</html>
